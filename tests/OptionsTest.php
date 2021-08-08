@@ -5,7 +5,6 @@ namespace Tests;
 use Sedder\Options;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use Mockery;
 
 final class OptionsTest extends TestCase
 {
@@ -47,13 +46,33 @@ final class OptionsTest extends TestCase
         (new Options([$flag, 'blah', __FILE__]))->validate();
     }
 
+    public function testValidateBadCommand()
+    {
+        $command = 'X';
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Unknown command "' . $command . '".');
+
+        (new Options([$command . '/foo/bar/', __FILE__]))->validate();
+    }
+
     public function testValidateBadString()
     {
-        $string = 'blah';
+        $string = 's/blah';
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Cannot parse "' . $string . '".');
 
         (new Options([$string, __FILE__]))->validate();
+    }
+
+    public function testEscape()
+    {
+        $this->assertSame('bl{{ESCAPE-SLASH}}ah', (new Options([]))->escape('bl\/ah'));
+    }
+
+    public function testUnescape()
+    {
+        $this->assertSame('bl/ah', (new Options([]))->unescape('bl{{ESCAPE-SLASH}}ah'));
     }
 }

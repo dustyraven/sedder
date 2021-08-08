@@ -17,7 +17,8 @@ try {
                 ->parse();
 } catch (InvalidArgumentException $e) {
     echo "\nError: " . $e->getMessage() . "\n\n";
-    echo "Usage: {$argv[0]} [-i] 's/{search}/{replace}/' input-file\n\n";
+    echo "Usage: {$argv[0]} [-i] 's/{search}/{replace}/' input-file\n";
+    echo "Note: slash ('/') could be escaped with a backslash: '\/'.\n\n";
     die(1);
 }
 
